@@ -26,7 +26,7 @@ def build_common(args):
 
 def build_windows():
     """Build windows executables/setups."""
-    ver = ''.join([str(sys.version.major), str(sys.version.minor)])
+    ver = ''.join([str(sys.version_info.major), str(sys.version_info.minor)])
     python_x86 = r'C:\Python{}_x32\python.exe'.format(ver)
     python_x64 = r'C:\Python{}\python.exe'.format(ver)
 
