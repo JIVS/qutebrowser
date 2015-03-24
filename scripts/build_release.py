@@ -1,6 +1,7 @@
 import os
 import sys
 import os.path
+import shutil
 import subprocess
 import argparse
 
@@ -42,23 +43,26 @@ def build_windows():
     utils.print_title("Running 64bit freeze.py bdist_msi")
     call_script('freeze.py', 'bdist_msi', python=python_x64)
 
-    os.makedirs(os.path.join('dist', 'zip'))
+    destdir = os.path.join('dist', 'zip', name)
+    try:
+        shutil.rmtree(destdir)
+    except FileNotFoundError:
+        pass
+    os.makedirs(destdir)
 
     utils.print_title("Zipping 32bit standalone...")
     name = 'qutebrowser-{}-windows-standalone-win32'.format(
         qutebrowser.__version__)
     origin = os.path.join('build', 'exe.win32-{}'.format(dotver))
     os.rename(origin, os.path.join('build', name))
-    shutil.make_archive(os.path.join('dist', 'zip', name), 'zip', 'build',
-                        name)
+    shutil.make_archive(os.path.join(destdir, name), 'zip', 'build', name)
 
     utils.print_title("Zipping 64bit standalone...")
     name = 'qutebrowser-{}-windows-standalone-amd64'.format(
         qutebrowser.__version__)
     origin = os.path.join('build', 'exe.win-amd64-{}'.format(dotver))
     os.rename(origin, os.path.join('build', name))
-    shutil.make_archive(os.path.join('dist', 'zip', name), 'zip', 'build',
-                        name)
+    shutil.make_archive(os.path.join(destdir, name), 'zip', 'build', name)
 
     utils.print_title("Creating final zip...")
     shutil.move(os.path.join('dist', 'qutebrowser-{}-amd64.msi'.format(
@@ -66,7 +70,7 @@ def build_windows():
     shutil.move(os.path.join('dist', 'qutebrowser-{}-win32.msi'.format(
         qutebrowser.__version__)), os.path.join('dist', 'zip'))
     shutil.make_archive('qutebrowser-{}-windows.zip'.format(
-        qutebrowser.__version__), 'zip', os.path.join('dist', 'zip'))
+        qutebrowser.__version__), 'zip', destdir)
 
 
 def main():
