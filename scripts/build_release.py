@@ -50,26 +50,29 @@ def build_windows():
         pass
     os.makedirs(destdir)
 
+    basedirname = 'qutebrowser-{}'.format(qutebrowser.__version__)
     utils.print_title("Zipping 32bit standalone...")
     name = 'qutebrowser-{}-windows-standalone-win32'.format(
         qutebrowser.__version__)
     origin = os.path.join('build', 'exe.win32-{}'.format(dotver))
-    os.rename(origin, os.path.join('build', name))
-    shutil.make_archive(os.path.join(destdir, name), 'zip', 'build', name)
+    os.rename(origin, os.path.join('build', basedirname))
+    shutil.make_archive(os.path.join(destdir, name), 'zip', 'build',
+                        basedirname)
 
     utils.print_title("Zipping 64bit standalone...")
     name = 'qutebrowser-{}-windows-standalone-amd64'.format(
         qutebrowser.__version__)
     origin = os.path.join('build', 'exe.win-amd64-{}'.format(dotver))
-    os.rename(origin, os.path.join('build', name))
-    shutil.make_archive(os.path.join(destdir, name), 'zip', 'build', name)
+    os.rename(origin, os.path.join('build', basedirname))
+    shutil.make_archive(os.path.join(destdir, name), 'zip', 'build',
+                        basedirname)
 
     utils.print_title("Creating final zip...")
     shutil.move(os.path.join('dist', 'qutebrowser-{}-amd64.msi'.format(
         qutebrowser.__version__)), os.path.join('dist', 'zip'))
     shutil.move(os.path.join('dist', 'qutebrowser-{}-win32.msi'.format(
         qutebrowser.__version__)), os.path.join('dist', 'zip'))
-    shutil.make_archive('qutebrowser-{}-windows.zip'.format(
+    shutil.make_archive('qutebrowser-{}-windows'.format(
         qutebrowser.__version__), 'zip', destdir)
 
 
