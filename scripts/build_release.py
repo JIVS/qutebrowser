@@ -43,7 +43,7 @@ def build_windows():
     utils.print_title("Running 64bit freeze.py bdist_msi")
     call_script('freeze.py', 'bdist_msi', python=python_x64)
 
-    destdir = os.path.join('dist', 'zip', name)
+    destdir = os.path.join('dist', 'zip')
     try:
         shutil.rmtree(destdir)
     except FileNotFoundError:
