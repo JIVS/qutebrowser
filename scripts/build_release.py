@@ -11,7 +11,7 @@ from scripts import utils
 
 def call_script(name, *args, python=sys.executable):
     path = os.path.join(os.path.dirname(__file__), name)
-    subprocess.check_call([python, path] + args)
+    subprocess.check_call([python, path] + list(args))
 
 
 def build_common(args):
