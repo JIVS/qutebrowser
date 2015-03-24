@@ -6,6 +6,7 @@ import argparse
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), os.pardir))
 
+import qutebrowser
 from scripts import utils
 
 
@@ -26,7 +27,9 @@ def build_common(args):
 
 def build_windows():
     """Build windows executables/setups."""
-    ver = ''.join([str(sys.version_info.major), str(sys.version_info.minor)])
+    parts = str(sys.version_info.major), str(sys.version_info.minor)
+    ver = ''.join(parts)
+    dotver = '.'.join(parts)
     python_x86 = r'C:\Python{}_x32\python.exe'.format(ver)
     python_x64 = r'C:\Python{}\python.exe'.format(ver)
 
@@ -38,6 +41,33 @@ def build_windows():
     call_script('freeze.py', 'bdist_msi', python=python_x86)
     utils.print_title("Running 64bit freeze.py bdist_msi")
     call_script('freeze.py', 'bdist_msi', python=python_x64)
+
+    os.makedirs(os.path.join('dist', 'zip'))
+
+    utils.print_title("Zipping 32bit standalone...")
+    name = 'qutebrowser-{}-windows-standalone-win32'.format(
+        qutebrowser.__version__)
+    origin = os.path.join('build', 'exe.win-win32-{}'.format(dotver))
+    os.rename(origin, os.path.join('build', name))
+    shutil.make_archive(os.path.join('dist', 'zip', name), 'zip', 'build',
+                        name)
+
+    utils.print_title("Zipping 64bit standalone...")
+    name = 'qutebrowser-{}-windows-standalone-amd64'.format(
+        qutebrowser.__version__)
+    origin = os.path.join('build', 'exe.win-amd64-{}'.format(dotver))
+    os.rename(os.path.join('build', 'exe.win-amd64-{}'.format(dotver)),
+              os.path.join('build', name))
+    shutil.make_archive(os.path.join('dist', 'zip', name), 'zip', 'build',
+                        name)
+
+    utils.print_title("Creating final zip...")
+    shutil.move(os.path.join('dist', 'qutebrowser-{}-amd64.msi'.format(
+        qutebrowser.__version__)), os.path.join('dist', 'zip'))
+    shutil.move(os.path.join('dist', 'qutebrowser-{}-win32.msi'.format(
+        qutebrowser.__version__)), os.path.join('dist', 'zip'))
+    shutil.make_archive('qutebrowser-{}-windows.zip'.format(
+        qutebrowser.__version__), 'zip', os.path.join('dist', 'zip'))
 
 
 def main():
