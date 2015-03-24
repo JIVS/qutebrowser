@@ -35,9 +35,9 @@ def build_windows():
     utils.print_title("Running 64bit freeze.py build_exe")
     call_script('freeze.py', 'build_exe', python=python_x64)
     utils.print_title("Running 32bit freeze.py bdist_msi")
-    call_script('freeze.py', 'build_exe', python=python_x86)
+    call_script('freeze.py', 'bdist_msi', python=python_x86)
     utils.print_title("Running 64bit freeze.py bdist_msi")
-    call_script('freeze.py', 'build_exe', python=python_x64)
+    call_script('freeze.py', 'bdist_msi', python=python_x64)
 
 
 def main():
