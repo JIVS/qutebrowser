@@ -16,18 +16,12 @@ def call_script(name, *args, python=sys.executable):
 
 def build_common(args):
     """Common buildsteps used for all OS'."""
-    utils.print_title("Running src2asciidoc.py")
-    call_script('src2asciidoc.py')
-
     utils.print_title("Running asciidoc2html.py")
     if args.asciidoc is not None:
         a2h_args = ['--asciidoc'] + args.asciidoc
     else:
         a2h_args = []
     call_script('asciidoc2html.py', *a2h_args)
-
-    utils.print_title("Running run_checks.py")
-    call_script('run_checks.py')
 
 
 def build_windows():
