@@ -26,6 +26,14 @@ def build_common(args):
     call_script('asciidoc2html.py', *a2h_args)
 
 
+def _maybe_remove(path):
+    """Remove a path if it exists."""
+    try:
+        shutil.rmtree(path)
+    except FileNotFoundError:
+        pass
+
+
 def build_windows():
     """Build windows executables/setups."""
     parts = str(sys.version_info.major), str(sys.version_info.minor)
@@ -44,28 +52,30 @@ def build_windows():
     call_script('freeze.py', 'bdist_msi', python=python_x64)
 
     destdir = os.path.join('dist', 'zip')
-    try:
-        shutil.rmtree(destdir)
-    except FileNotFoundError:
-        pass
+    _maybe_remove(destdir)
     os.makedirs(destdir)
 
     basedirname = 'qutebrowser-{}'.format(qutebrowser.__version__)
+    builddir = os.path.join('build', basedirname)
+    _maybe_remove(builddir)
+
     utils.print_title("Zipping 32bit standalone...")
     name = 'qutebrowser-{}-windows-standalone-win32'.format(
         qutebrowser.__version__)
     origin = os.path.join('build', 'exe.win32-{}'.format(dotver))
-    os.rename(origin, os.path.join('build', basedirname))
+    os.rename(origin, builddir)
     shutil.make_archive(os.path.join(destdir, name), 'zip', 'build',
                         basedirname)
+    shutil.rmtree(builddir)
 
     utils.print_title("Zipping 64bit standalone...")
     name = 'qutebrowser-{}-windows-standalone-amd64'.format(
         qutebrowser.__version__)
     origin = os.path.join('build', 'exe.win-amd64-{}'.format(dotver))
-    os.rename(origin, os.path.join('build', basedirname))
+    os.rename(origin, builddir)
     shutil.make_archive(os.path.join(destdir, name), 'zip', 'build',
                         basedirname)
+    shutil.rmtree(builddir)
 
     utils.print_title("Creating final zip...")
     shutil.move(os.path.join('dist', 'qutebrowser-{}-amd64.msi'.format(
