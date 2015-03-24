@@ -47,7 +47,7 @@ def build_windows():
     utils.print_title("Zipping 32bit standalone...")
     name = 'qutebrowser-{}-windows-standalone-win32'.format(
         qutebrowser.__version__)
-    origin = os.path.join('build', 'exe.win-win32-{}'.format(dotver))
+    origin = os.path.join('build', 'exe.win32-{}'.format(dotver))
     os.rename(origin, os.path.join('build', name))
     shutil.make_archive(os.path.join('dist', 'zip', name), 'zip', 'build',
                         name)
@@ -56,8 +56,7 @@ def build_windows():
     name = 'qutebrowser-{}-windows-standalone-amd64'.format(
         qutebrowser.__version__)
     origin = os.path.join('build', 'exe.win-amd64-{}'.format(dotver))
-    os.rename(os.path.join('build', 'exe.win-amd64-{}'.format(dotver)),
-              os.path.join('build', name))
+    os.rename(origin, os.path.join('build', name))
     shutil.make_archive(os.path.join('dist', 'zip', name), 'zip', 'build',
                         name)
 
